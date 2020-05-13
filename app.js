@@ -10,7 +10,7 @@ app.use(cors());
 const apps = require('./apps-data.js');
 
 app.get('/apps', (req, res) => {
-  const { search = "", sort } = req.query;
+  const { search = "", sort, genres } = req.query;
 
   if (sort) {
     if (!['App', 'Rating'].includes(sort)) {
@@ -20,7 +20,13 @@ app.get('/apps', (req, res) => {
     }
   }
 
-  
+  if (genres) {
+    if (!['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'].includes(genres)) {
+      return res
+      .status(400)
+      .send(`Must be either 'Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'`);
+    }
+  }
 
   let results = apps
     .filter(appName =>
@@ -28,7 +34,14 @@ app.get('/apps', (req, res) => {
         .App
         .toLowerCase()
         .includes(search.toLowerCase())
-  );
+    );
+
+    if (genres) {
+      results = results.filter(genre => genre
+        .Genres
+        .toLowerCase()
+        .includes(genres.toLowerCase()))
+    }
 
     if (sort) {
       results.sort((a, b) => {
@@ -37,8 +50,11 @@ app.get('/apps', (req, res) => {
     }
 
   res.json(results);
+
 })
 
 app.listen(8100, () => {
   console.log('Server started on port 8100');
 })
+
+module.exports = app;
