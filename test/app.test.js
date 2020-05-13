@@ -66,5 +66,9 @@ describe ('GET /apps', () => {
       });
   })
 
+  it('should return a request by genre', () => {
+
+  })
+
 });
 
