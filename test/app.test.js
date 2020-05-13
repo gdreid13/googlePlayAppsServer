@@ -67,7 +67,14 @@ describe ('GET /apps', () => {
   })
 
   it('should return a request by genre', () => {
+    return request(app)
+      .get('/apps')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(res => {
+        expect(res.body).to.be.an('array');
 
+      })
   })
 
 });
